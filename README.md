@@ -1,7 +1,7 @@
 jobacklightcontroller
 =====================
 
-Simple gui allowing easy backlight controlling on intel_backlight linux interface. 
+Simple Qt gui allowing easy backlight controlling on intel_backlight linux interface. 
 ie. /sys/class/backlight/intel_backlight/brightness
 <p>
 This gui's first goal is not portability but it might work on other backlight interface. In order to do so,

@@ -4,6 +4,13 @@
 #include <QMainWindow>
 #include <QSystemTrayIcon>
 
+int get_back_int(const char * file);
+void set_back_int(const char * file, int backlight);
+inline const char * get_homefile()
+{
+    return (getenv("HOME") + (std::string)"/.savedbacklight").c_str();
+}
+
 namespace Ui {
 class MainWindow;
 }
@@ -13,7 +20,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
     
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(const char * p_path, int p_maxb, QWidget *parent = 0);
     ~MainWindow();
     
 private slots:
@@ -68,6 +75,9 @@ private:
 
     QSystemTrayIcon *trayIcon;
     QMenu *trayIconMenu;
+
+    const char * path;
+    int maxb;
 
 };
 

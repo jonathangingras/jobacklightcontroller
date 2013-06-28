@@ -10,15 +10,33 @@
 #include <QIcon>
 #include <iostream>
 
-MainWindow::MainWindow(QWidget *parent) :
+int get_back_int(const char * file)
+{
+    FILE * p = fopen(file , "r");
+    char s_maxb[6];
+    fgets(s_maxb, 6, p);
+    fclose(p);
+    return atoi(s_maxb);
+}
+
+void set_back_int(const char * file, int backlight)
+{
+    FILE * p = fopen(file , "w+");
+    fprintf(p, "%i", backlight);
+    fclose(p);
+}
+
+MainWindow::MainWindow(const char * p_path, int p_maxb, QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    path(p_path),
+    maxb(p_maxb)
 {
     ui->setupUi(this);
 
     std::ifstream l_f;
     std::string ac_b;
-    l_f.open("/sys/class/backlight/intel_backlight/brightness");
+    l_f.open(path);
     l_f >> ac_b;
     l_f.close();
     ui->label->setText(QString::fromUtf8((ac_b).c_str()));
@@ -96,14 +114,8 @@ void MainWindow::trayIconClicked(QSystemTrayIcon::ActivationReason reason)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    //if (trayIcon->isVisible()) {
-    //    trayIcon->showMessage(tr("Still here!!!"),
-    //    tr("This application is still running. To quit please click this icon and select Quit"));
-        hide();
-
-
-        event->ignore(); // Don't let the event propagate to the base class
-    //}
+    hide();
+    event->ignore();
 }
 
 void MainWindow::on_actionQuit_triggered()
@@ -113,33 +125,24 @@ void MainWindow::on_actionQuit_triggered()
 
 void MainWindow::on_horizontalSlider_valueChanged(int value)
 {
-    std::ofstream l_f;
-    l_f.open("/sys/class/backlight/intel_backlight/brightness");
-
-    int value_2nd = (value/(float)4882)*100;
+    int value_2nd = (value/(float)maxb)*100;
 
     ui->label->setText(  QString::fromUtf8("<html><h1>")
                        + QString::number(value)
-                       + QString::fromUtf8("/4882 ( ")
+                       + QString::fromUtf8("/")
+                       + QString::number(maxb)
+                       + QString::fromUtf8(" ( ")
                        + QString::number(value_2nd)
                        + QString::fromUtf8("% )")
                        + QString::fromUtf8("</h1></html>")
                       );
-    l_f << value;
-    l_f.close();
+
+    set_back_int(path, value);
 }
 
 void MainWindow::on_horizontalSlider_sliderReleased()
 {
-    std::ifstream l_f;
-    std::ofstream l_hf;
-    l_f.open("/sys/class/backlight/intel_backlight/brightness");
-    l_hf.open((getenv("HOME") + (std::string)"/.savedbacklight").c_str());
-    std::string curr;
-    l_f >> curr;
-    l_hf << curr; //<< std::endl;
-    l_f.close();
-    l_hf.close();
+    set_back_int(get_homefile(), get_back_int(path));
 }
 
 void MainWindow::on_horizontalSlider_sliderPressed()
@@ -149,131 +152,62 @@ void MainWindow::on_horizontalSlider_sliderPressed()
 
 void MainWindow::on_horizontalSlider_actionTriggered(int action)
 {
-    // if 4 --> -10 ;;;; if 3 --> +10
-    std::ifstream l_f;
-    std::ofstream l_hf;
-    int curr;
-    l_f.open("/sys/class/backlight/intel_backlight/brightness");
-    l_hf.open((getenv("HOME") + (std::string)"/.savedbacklight").c_str());
-    l_f >> curr;
-    l_f.close();
-
     if(action == 4)
-        l_hf << curr - 10;
+        set_back_int(get_homefile(), get_back_int(path) - 10);
     else if(action == 3)
-        l_hf << curr + 10;
-
-    l_hf.close();
+        set_back_int(get_homefile(), get_back_int(path) + 10);
 }
 
 void MainWindow::on_actionBlank_triggered()
 {
-    std::ifstream l_if;
-    std::ifstream l_ihf;
-    int lnb, lnbh;
-    bool blank_status = false;
-    l_if.open("/sys/class/backlight/intel_backlight/brightness");
-    l_ihf.open((getenv("HOME") + (std::string)"/.savedbacklight").c_str());
-    l_if >> lnb;
-    l_ihf >> lnbh;
-
-    if(lnb == 0 && lnbh != 0)
-        blank_status = true;
-
-    if(blank_status)
-    {
-        blank_status = false;
-        MainWindow::on_actionRestore_triggered();
-    }
-
+    if(get_back_int(path) == 0)
+        set_back_int(path, get_back_int(get_homefile()));
     else
-    {
-        std::ofstream l_f;
-        l_f.open("/sys/class/backlight/intel_backlight/brightness");
-        l_f << 0;
-        ui->horizontalSlider->setValue(0);
-        l_f.close();
-        blank_status = true;
-    }
+        set_back_int(path, 0);
 }
 
 void MainWindow::on_actionRestore_triggered()
 {
-    std::ofstream l_f;
-    std::ifstream l_hf;
-    l_f.open("/sys/class/backlight/intel_backlight/brightness");
-    l_hf.open((getenv("HOME") + (std::string)"/.savedbacklight").c_str());
-    std::string curr;
-    l_hf >> curr;
-    l_f << curr << std::endl;
-    ui->horizontalSlider->setValue(atoi(curr.c_str()));
-    l_hf.close();
-    l_f.close();
+    ui->horizontalSlider->setValue(get_back_int(path));
 }
 
 void MainWindow::on_actionFull_triggered()
 {
-    std::ofstream l_f;
-    std::ofstream l_hf;
-    l_f.open("/sys/class/backlight/intel_backlight/brightness");
-    l_hf.open((getenv("HOME") + (std::string)"/.savedbacklight").c_str());
-    l_f << 4882;
-    l_hf << 4882;
-    ui->horizontalSlider->setValue(4882);
-    l_f.close();
-    l_hf.close();
+    ui->horizontalSlider->setValue(maxb);
+    set_back_int(path, maxb);
+    set_back_int(get_homefile(), maxb);
 }
 
 void MainWindow::on_action5_triggered()
 {
-    std::ofstream l_f;
-    std::ofstream l_hf;
-    l_f.open("/sys/class/backlight/intel_backlight/brightness");
-    l_hf.open((getenv("HOME") + (std::string)"/.savedbacklight").c_str());
-    l_f << 245;
-    l_hf << 245;
-    ui->horizontalSlider->setValue(245);
-    l_f.close();
-    l_hf.close();
+    int perval = 0.05 * maxb + 1;
+    ui->horizontalSlider->setValue(perval);
+    set_back_int(path, perval);
+    set_back_int(get_homefile(), perval);
 }
 
 void MainWindow::on_action20_triggered()
 {
-    std::ofstream l_f;
-    std::ofstream l_hf;
-    l_f.open("/sys/class/backlight/intel_backlight/brightness");
-    l_hf.open((getenv("HOME") + (std::string)"/.savedbacklight").c_str());
-    l_f << 995;
-    l_hf << 995;
-    ui->horizontalSlider->setValue(995);
-    l_f.close();
-    l_hf.close();
+    int perval = 0.2 * maxb + 1;
+    ui->horizontalSlider->setValue(perval);
+    set_back_int(path, perval);
+    set_back_int(get_homefile(), perval);
 }
 
 void MainWindow::on_action50_triggered()
 {
-    std::ofstream l_f;
-    std::ofstream l_hf;
-    l_f.open("/sys/class/backlight/intel_backlight/brightness");
-    l_hf.open((getenv("HOME") + (std::string)"/.savedbacklight").c_str());
-    l_f << 2441;
-    l_hf << 2441;
-    ui->horizontalSlider->setValue(2441);
-    l_f.close();
-    l_hf.close();
+    int perval = 0.5 * maxb;
+    ui->horizontalSlider->setValue(perval);
+    set_back_int(path, perval);
+    set_back_int(get_homefile(), perval);
 }
 
 void MainWindow::on_action75_triggered()
 {
-    std::ofstream l_f;
-    std::ofstream l_hf;
-    l_f.open("/sys/class/backlight/intel_backlight/brightness");
-    l_hf.open((getenv("HOME") + (std::string)"/.savedbacklight").c_str());
-    l_f << 3668;
-    l_hf << 3668;
-    ui->horizontalSlider->setValue(3668);
-    l_f.close();
-    l_hf.close();
+    int perval = 0.75 * maxb + 1;
+    ui->horizontalSlider->setValue(perval);
+    set_back_int(path, perval);
+    set_back_int(get_homefile(), perval);
 }
 
 void MainWindow::on_pushButton_clicked()

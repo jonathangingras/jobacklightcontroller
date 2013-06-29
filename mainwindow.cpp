@@ -34,13 +34,9 @@ MainWindow::MainWindow(const char * p_path, int p_maxb, QWidget *parent) :
 {
     ui->setupUi(this);
 
-    std::ifstream l_f;
-    std::string ac_b;
-    l_f.open(path);
-    l_f >> ac_b;
-    l_f.close();
-    ui->label->setText(QString::fromUtf8((ac_b).c_str()));
-    ui->horizontalSlider->setValue(atoi(ac_b.c_str()));    
+    int ac_b = get_back_int(path);
+    ui->label->setText(QString::number(ac_b));
+    ui->horizontalSlider->setValue(ac_b);
 
     createTrayIcon();
 
@@ -107,6 +103,7 @@ void MainWindow::trayIconClicked(QSystemTrayIcon::ActivationReason reason)
     if(reason == QSystemTrayIcon::DoubleClick)
     {
         this->activateWindow();
+        this->ui->horizontalSlider->setValue(get_back_int(path));
         this->show();
         this->setFocus();
     }

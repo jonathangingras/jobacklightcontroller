@@ -1,0 +1,12 @@
+
+#This .service file is inteded to be used by systemd as a multi-user deamon to initiate backlight permissions
+#at boot tim. You may symlink it or put it directly in /etc/systemd/system/multi-user.target.wants/
+
+[Unit]
+Description=Initiation of backlight permissions
+
+[Service]
+ExecStart=/usr/bin/chmod 666 /sys/class/backlight/intel_backlight/brightness
+
+[Install]
+Alias=joinitbacklight.service

@@ -23,3 +23,4 @@ $ qmake-qt4 # or whatever your qmake command looks like<br>
 $ make<br>
 $ mv jobacklightcontroller /usr/bin/ # or wherever in your environnement PATH<br>
 </p>
+

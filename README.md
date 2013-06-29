@@ -12,7 +12,7 @@ you may change lines defining the backlight path and backlight_max path at the b
 <p>
 <code>
 #define MAX_B get_back_int("/sys/class/backlight/intel_backlight/max_brightness")<br>
-#define PATH "/sys/class/backlight/intel_backlight/brightness"
+#define BL_PATH "/sys/class/backlight/intel_backlight/brightness"
 </code>
 </p>
 

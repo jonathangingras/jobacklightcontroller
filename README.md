@@ -26,6 +26,6 @@ is a multi-user deamon I enable at boot (I run systemd).
 <p>
 $ qmake-qt4 # or whatever your qmake command looks like<br>
 $ make<br>
-$ mv jobacklightcontroller /usr/bin/ # or wherever in your environnement PATH<br>
+$ mv joblc /usr/bin/ # or wherever in your environment PATH<br>
 </p>
 

@@ -24,15 +24,33 @@ int main(int argc, char *argv[])
         {
             int current = get_back_int(BL_PATH);
             int _new_ = current + (0.05 * MAX_B);
-            set_back_int(BL_PATH, _new_);
-            set_back_int(get_homefile(), _new_);
+
+            if (_new_ > MAX_B)
+            {
+                set_back_int(BL_PATH, MAX_B);
+                set_back_int(get_homefile(), MAX_B);
+            }
+            else
+            {
+                set_back_int(BL_PATH, _new_);
+                set_back_int(get_homefile(), _new_);
+            }
         }
         else if(strcmp(argv[1], "down") == 0)
         {
             int current = get_back_int(BL_PATH);
             int _new_ = current - (0.05 * MAX_B);
-            set_back_int(BL_PATH, _new_);
-            set_back_int(get_homefile(), _new_);
+
+            if (_new_ < 0)
+            {
+                set_back_int(BL_PATH, 0);
+                set_back_int(get_homefile(), 0);
+            }
+            else
+            {
+                set_back_int(BL_PATH, _new_);
+                set_back_int(get_homefile(), _new_);
+            }
         }
         else if(strcmp(argv[1], "full") == 0)
         {

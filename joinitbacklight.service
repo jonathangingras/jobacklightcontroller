@@ -6,7 +6,7 @@
 Description=Initiation of backlight permissions
 
 [Service]
-ExecStart=/usr/bin/chmod 666 /sys/class/backlight/intel_backlight/brightness
+ExecStart=/usr/bin/chmod 666 /sys/class/backlight/acpi_video1/brightness
 
 [Install]
 Alias=joinitbacklight.service

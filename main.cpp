@@ -6,8 +6,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define MAX_B get_back_int("/sys/class/backlight/intel_backlight/max_brightness")
-#define BL_PATH "/sys/class/backlight/intel_backlight/brightness"
+#define MAX_B get_back_int("/sys/class/backlight/acpi_video1/max_brightness")
+#define BL_PATH "/sys/class/backlight/acpi_video1/brightness"
 
 int main(int argc, char *argv[])
 {

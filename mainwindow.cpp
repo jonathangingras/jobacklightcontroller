@@ -36,6 +36,7 @@ MainWindow::MainWindow(const char * p_path, int p_maxb, QWidget *parent) :
 
     int ac_b = get_back_int(path);
     ui->label->setText(QString::number(ac_b));
+    ui->horizontalSlider->setMaximum(maxb);
     ui->horizontalSlider->setValue(ac_b);
 
     createTrayIcon();

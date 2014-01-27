@@ -1,10 +1,10 @@
-#include "mainwindow.h"
 #include <QApplication>
-#include <cstring>
+#include <QMainWindow>
+#include <QSystemTrayIcon>
 #include <iostream>
-#include <sstream>
-#include <stdlib.h>
-#include <stdio.h>
+
+#include "utils.h"
+#include "mainwindow.h"
 
 #define MAX_B get_back_int("/sys/class/backlight/acpi_video1/max_brightness")
 #define BL_PATH "/sys/class/backlight/acpi_video1/brightness"
@@ -67,9 +67,9 @@ int main(int argc, char *argv[])
             float hblf = get_back_int(get_homefile());
             std::cout << std::endl << "Files:" << std::endl << std::endl
                       << "BL system file :      " << blf
-                      << " (" << (int)((blf/(float)4882)*(float)100) << "%)" << std::endl
+                      << " (" << (int)((blf/(float)MAX_B)*(float)100) << "%)" << std::endl
                       << "home saved BL file :  " << hblf
-                      << " (" << (int)((hblf/(float)4882)*(float)100) << "%)" << std::endl
+                      << " (" << (int)((hblf/(float)MAX_B)*(float)100) << "%)" << std::endl
                       << std::endl;
         }
         else if(strcmp(argv[1], "-n") == 0 || strcmp(argv[1], "--quiet") == 0)

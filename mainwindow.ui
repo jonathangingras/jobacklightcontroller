@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>471</width>
+    <width>562</width>
     <height>230</height>
    </rect>
   </property>
@@ -35,7 +35,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="QLabel" name="label">
+       <widget class="QLabel" name="textLabel">
         <property name="text">
          <string>&lt;html&gt;&lt;h1&gt;&lt;p&gt;TextLabel&lt;/p&gt;&lt;/h1&gt;&lt;/html&gt;</string>
         </property>
@@ -113,6 +113,13 @@
          </widget>
         </item>
         <item>
+         <widget class="QPushButton" name="pushButton_8">
+          <property name="text">
+           <string>15%</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QPushButton" name="pushButton_5">
           <property name="text">
            <string>20%</string>
@@ -170,8 +177,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>471</width>
-     <height>27</height>
+     <width>562</width>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -189,6 +196,7 @@
     <addaction name="actionBlank"/>
     <addaction name="actionFull"/>
     <addaction name="action5"/>
+    <addaction name="action15"/>
     <addaction name="action20"/>
     <addaction name="action50"/>
     <addaction name="action75"/>
@@ -239,6 +247,11 @@
   <action name="actionSee_savedbacklight_file">
    <property name="text">
     <string>See .savedbacklight file</string>
+   </property>
+  </action>
+  <action name="action15">
+   <property name="text">
+    <string>15%</string>
    </property>
   </action>
  </widget>

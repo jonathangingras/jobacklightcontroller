@@ -24,7 +24,7 @@ is a multi-user deamon I enable at boot (I run systemd).
 
 <h3>INSTALL</h3>
 <p>
-$ qmake-qt4 # or whatever your qmake command looks like<br>
+$ qmake<br>
 $ make<br>
 $ mv joblc /usr/bin/ # or wherever in your environment PATH<br>
 </p>
